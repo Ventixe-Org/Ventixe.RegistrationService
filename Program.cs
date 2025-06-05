@@ -1,14 +1,24 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
 using Ventixe.RegistrationService.Data;
 using Ventixe.RegistrationService.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddDbContext<AppDbContext>(opts =>
     opts.UseInMemoryDatabase("VentixeDb"));
 
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -45,6 +55,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowReactApp");
 
 app.UseAuthorization();
 app.MapControllers();
