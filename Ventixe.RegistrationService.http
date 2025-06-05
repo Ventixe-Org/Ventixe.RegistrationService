@@ -1,0 +1,6 @@
+@Ventixe.RegistrationService_HostAddress = http://localhost:5157
+
+GET {{Ventixe.RegistrationService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
