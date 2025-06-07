@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Cors;
 using Microsoft.EntityFrameworkCore;
 using Ventixe.RegistrationService.Data;
 using Ventixe.RegistrationService.Models;
@@ -24,30 +23,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    if (!db.Registrations.Any())
-    {
-        db.Registrations.AddRange(
-            new Registration
-            {
-                EventId = 1,
-                Name = "Alice Andersson",
-                Email = "alice@example.com",
-                Created = DateTime.UtcNow
-            },
-            new Registration
-            {
-                EventId = 2,
-                Name = "Bob Berg",
-                Email = "bob@example.com",
-                Created = DateTime.UtcNow.AddMinutes(-10)
-            }
-        );
-        db.SaveChanges();
-    }
-}
+app.UseCors("AllowReactApp");
 
 if (app.Environment.IsDevelopment())
 {
@@ -56,8 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowReactApp");
-
+app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
